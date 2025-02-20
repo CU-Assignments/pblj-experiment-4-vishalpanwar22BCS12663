@@ -1,0 +1,74 @@
+import java.util.*;
+class Card {
+    private String rank;
+    private String suit;
+    public Card(String rank, String suit) {
+        this.rank = rank;
+        this.suit = suit;
+    }
+    public String getRank() {
+        return rank;
+    }
+    public String getSuit() {
+        return suit;
+    }
+    @Override
+    public String toString() {
+        return rank + " of " + suit; }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Card card = (Card) obj;
+        return rank.equals(card.rank) && suit.equals(card.suit);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(rank, suit);
+    }
+}
+
+public class CardCollection {
+    private List<Card> cards;
+    public CardCollection() {
+        cards = new ArrayList<>();
+    }
+    public void addCard(Card card) {
+        cards.add(card);
+    }
+    public List<Card> getCardsBySuit(String suit) {
+        List<Card> result = new ArrayList<>();
+        for (Card card : cards) {
+            if (card.getSuit().equalsIgnoreCase(suit)) {
+                result.add(card);
+            }
+        }
+        return result;
+    }
+    public void displayAllCards() {
+        if (cards.isEmpty()) {
+            System.out.println("No cards in the collection.");
+        } else {
+            for (Card card : cards) {
+                System.out.println(card);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        CardCollection cardCollection = new CardCollection();
+        cardCollection.addCard(new Card("Ace", "Spades"));
+        cardCollection.addCard(new Card("2", "Hearts"));
+        cardCollection.addCard(new Card("King", "Spades"));
+        cardCollection.addCard(new Card("Queen", "Diamonds"));
+        cardCollection.addCard(new Card("10", "Spades"));
+        cardCollection.addCard(new Card("7", "Hearts"));
+        System.out.println("All cards in the collection:");
+        cardCollection.displayAllCards();
+        System.out.println("\nCards of Spades:");
+        List<Card> spadesCards = cardCollection.getCardsBySuit("Spades");
+        for (Card card : spadesCards) {
+            System.out.println(card);
+        }
+    }
+}
