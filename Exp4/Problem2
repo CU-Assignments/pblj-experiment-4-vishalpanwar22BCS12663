@@ -1,74 +1,163 @@
 import java.util.*;
-class Card {
-    private String rank;
-    private String suit;
-    public Card(String rank, String suit) {
-        this.rank = rank;
-        this.suit = suit;
+
+class Employee {
+    private String name;
+    private int id;
+    private double salary;
+
+    public Employee(String name, int id, double salary) {
+        this.name = name;
+        this.id = id;
+        this.salary = salary;
     }
-    public String getRank() {
-        return rank;
+
+    public String getName() {
+        return name;
     }
-    public String getSuit() {
-        return suit;
+
+    public int getId() {
+        return id;
     }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
     @Override
     public String toString() {
-        return rank + " of " + suit; }
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Card card = (Card) obj;
-        return rank.equals(card.rank) && suit.equals(card.suit);
-    }
-    @Override
-    public int hashCode() {
-        return Objects.hash(rank, suit);
+        return "Employee ID: " + id + ", Name: " + name + ", Salary: $" + salary;
     }
 }
 
-public class CardCollection {
-    private List<Card> cards;
-    public CardCollection() {
-        cards = new ArrayList<>();
-    }
-    public void addCard(Card card) {
-        cards.add(card);
-    }
-    public List<Card> getCardsBySuit(String suit) {
-        List<Card> result = new ArrayList<>();
-        for (Card card : cards) {
-            if (card.getSuit().equalsIgnoreCase(suit)) {
-                result.add(card);
-            }
-        }
-        return result;
-    }
-    public void displayAllCards() {
-        if (cards.isEmpty()) {
-            System.out.println("No cards in the collection.");
-        } else {
-            for (Card card : cards) {
-                System.out.println(card);
+public class EmployeeManagement {
+
+    private static List<Employee> employees = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println("Employee Management System");
+            System.out.println("1. Add Employee");
+            System.out.println("2. Update Employee");
+            System.out.println("3. Remove Employee");
+            System.out.println("4. Search Employee");
+            System.out.println("5. Display All Employees");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // consume the newline character
+
+            switch (choice) {
+                case 1:
+                    addEmployee();
+                    break;
+                case 2:
+                    updateEmployee();
+                    break;
+                case 3:
+                    removeEmployee();
+                    break;
+                case 4:
+                    searchEmployee();
+                    break;
+                case 5:
+                    displayAllEmployees();
+                    break;
+                case 6:
+                    System.out.println("Exiting the system.");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice, please try again.");
             }
         }
     }
 
-    public static void main(String[] args) {
-        CardCollection cardCollection = new CardCollection();
-        cardCollection.addCard(new Card("Ace", "Spades"));
-        cardCollection.addCard(new Card("2", "Hearts"));
-        cardCollection.addCard(new Card("King", "Spades"));
-        cardCollection.addCard(new Card("Queen", "Diamonds"));
-        cardCollection.addCard(new Card("10", "Spades"));
-        cardCollection.addCard(new Card("7", "Hearts"));
-        System.out.println("All cards in the collection:");
-        cardCollection.displayAllCards();
-        System.out.println("\nCards of Spades:");
-        List<Card> spadesCards = cardCollection.getCardsBySuit("Spades");
-        for (Card card : spadesCards) {
-            System.out.println(card);
+    public static void addEmployee() {
+        System.out.print("Enter Employee Name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter Employee ID: ");
+        int id = scanner.nextInt();
+        System.out.print("Enter Employee Salary: ");
+        double salary = scanner.nextDouble();
+        scanner.nextLine(); // consume newline
+
+        employees.add(new Employee(name, id, salary));
+        System.out.println("Employee added successfully.");
+    }
+
+    public static void updateEmployee() {
+        System.out.print("Enter Employee ID to update: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+        Employee employee = findEmployeeById(id);
+
+        if (employee != null) {
+            System.out.print("Enter new name (current: " + employee.getName() + "): ");
+            String name = scanner.nextLine();
+            System.out.print("Enter new salary (current: " + employee.getSalary() + "): ");
+            double salary = scanner.nextDouble();
+            scanner.nextLine(); // consume newline
+
+            employee.setName(name);
+            employee.setSalary(salary);
+            System.out.println("Employee updated successfully.");
+        } else {
+            System.out.println("Employee not found.");
         }
+    }
+
+    public static void removeEmployee() {
+        System.out.print("Enter Employee ID to remove: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+        Employee employee = findEmployeeById(id);
+
+        if (employee != null) {
+            employees.remove(employee);
+            System.out.println("Employee removed successfully.");
+        } else {
+            System.out.println("Employee not found.");
+        }
+    }
+
+    public static void searchEmployee() {
+        System.out.print("Enter Employee ID to search: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+        Employee employee = findEmployeeById(id);
+
+        if (employee != null) {
+            System.out.println(employee);
+        } else {
+            System.out.println("Employee not found.");
+        }
+    }
+
+    public static void displayAllEmployees() {
+        if (employees.isEmpty()) {
+            System.out.println("No employees found.");
+        } else {
+            for (Employee employee : employees) {
+                System.out.println(employee);
+            }
+        }
+    }
+
+    private static Employee findEmployeeById(int id) {
+        for (Employee employee : employees) {
+            if (employee.getId() == id) {
+                return employee;
+            }
+        }
+        return null;
     }
 }
